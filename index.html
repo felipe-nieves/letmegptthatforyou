@@ -41,11 +41,11 @@
         .mouse {
             width: 30px;
             height: 30px;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/8/8c/Basic_cursor.svg') no-repeat;
+            background: url('images/cursor.png') no-repeat;
             background-size: contain;
             position: absolute;
             display: none;
-            transition: left 0.7s linear, top 0.7s linear;
+            transition: left 2s linear, top 2s linear;
         }
         .share-link {
             margin-top: 20px;
@@ -94,11 +94,11 @@
             setTimeout(() => {
                 mouse.style.left = `${endX}px`;
                 mouse.style.top = `${endY}px`;
-            }, 500);
+            }, 1500); 
 
             setTimeout(() => {
                 window.location.href = `https://chatgpt.com/?q=${encodeURIComponent(query)}`;
-            }, 1200);
+            }, 5000); 
         }
 
         function generateShareableLink(query) {
