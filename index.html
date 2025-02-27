@@ -4,19 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Let Me ChatGPT That For You</title>
-    <script>
-        function redirect() {
-            const params = new URLSearchParams(window.location.search);
-            const query = params.get("q");
-            if (query) {
-                window.location.href = `https://chatgpt.com/?q=${encodeURIComponent(query)}`;
-            }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
         }
-        window.onload = redirect;
-    </script>
+        .container {
+            margin-top: 10%;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        input {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #0084ff;
+            color: white;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #005bb5;
+        }
+        .mouse {
+            width: 30px;
+            height: 30px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/8/8c/Basic_cursor.svg') no-repeat;
+            background-size: contain;
+            position: absolute;
+            display: none;
+            transition: left 0.7s linear, top 0.7s linear;
+        }
+        .share-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+        .share-link input {
+            width: 70%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <p>Redirecting you to ChatGPT...</p>
+    <div class="container">
+        <h1>Let Me ChatGPT That For You</h1>
+        <input type="text" id="query" placeholder="Enter your question...">
+        <button id="search-btn">Search</button>
+        <div class="mouse" id="fake-mouse"></div>
+
+        <div class="share-link">
+            <p>Share this query:</p>
+            <input type="text" id="share-url" readonly>
+        </div>
+    </div>
+
+    <script>
+        function moveMouseAndClick(query) {
+            let button = document.getElementById("search-btn");
+            let mouse = document.getElementById("fake-mouse");
+
+            let buttonRect = button.getBoundingClientRect();
+            let startX = window.innerWidth * 0.1;
+            let startY = window.innerHeight * 0.8;
+            let endX = buttonRect.left + (buttonRect.width / 2);
+            let endY = buttonRect.top + (buttonRect.height / 2);
+
+            mouse.style.display = "block";
+            mouse.style.position = "absolute";
+            mouse.style.left = `${startX}px`;
+            mouse.style.top = `${startY}px`;
+
+            setTimeout(() => {
+                mouse.style.left = `${endX}px`;
+                mouse.style.top = `${endY}px`;
+            }, 500);
+
+            setTimeout(() => {
+                window.location.href = `https://chatgpt.com/?q=${encodeURIComponent(query)}`;
+            }, 1200);
+        }
+
+        function generateShareableLink(query) {
+            let shareInput = document.getElementById("share-url");
+            let url = `${window.location.origin}${window.location.pathname}?q=${encodeURIComponent(query)}`;
+            shareInput.value = url;
+        }
+
+        document.getElementById("search-btn").addEventListener("click", function() {
+            let query = document.getElementById("query").value.trim();
+            if (query === "") return;
+            generateShareableLink(query);
+            moveMouseAndClick(query);
+        });
+
+        document.getElementById("query").addEventListener("input", function() {
+            let query = this.value.trim();
+            generateShareableLink(query);
+        });
+
+        function checkForQueryParam() {
+            const params = new URLSearchParams(window.location.search);
+            const query = params.get("q");
+
+            if (query) {
+                document.getElementById("query").value = query;
+                generateShareableLink(query);
+                setTimeout(() => moveMouseAndClick(query), 1000);
+            }
+        }
+
+        window.onload = checkForQueryParam;
+    </script>
 </body>
 </html>
-
